@@ -48,7 +48,6 @@ var toppingsButtons = document.getElementById('toppings')
 Object.keys(_map).forEach(topping => {
   const toppingButton = document.createElement('button')
   toppingButton.innerHTML = _map[topping]['fr']
-  console.log(topping)
   toppingButton.addEventListener('click', evt => {
     if (pizza) {
       pizza.addTopping(topping)

@@ -35,16 +35,37 @@ export class ListPizza {
   }
 
   addHtml () {
-    let html = '<thead><tr><td>Nom pizza</td><td>Ingredients</td><td>Cuisson</td></tr></thead>'
     let list = this.db.pizzas.toArray()
+    var pizzaList = document.getElementById('listePizza')
     list.then(data => {
       data.forEach(function (item) {
         var pizza = new Pizza(item.name, item.toppings, item.isCook)
-        html += '<tr><td>' + pizza.monNom() + '</td>'
-        html += pizza.toString('fr')
-        html += '</tr>'
+        let tr = document.createElement('tr')
+        let tdName = document.createElement('td')
+        tdName.innerHTML = pizza.monNom()
+        let tdTopping = document.createElement('td')
+        tdTopping.innerHTML = pizza.toString('fr')
+        let tdCook = document.createElement('td')
+        // a faire
+
+        let tdRemove = document.createElement('td')
+        let RemoveButton = document.createElement('button')
+        RemoveButton.innerHTML = 'Supprimer'
+        RemoveButton.addEventListener('click', evt => {
+          if (pizza) {
+            this.deletePizza(pizza)
+            console.log(pizza.monNom() + ' supprimé')
+          }
+        })
+        tdRemove.appendChild(RemoveButton)
+
+        tr.appendChild(tdName)
+        tr.appendChild(tdTopping)
+        tr.appendChild(tdCook)
+        tr.appendChild(tdRemove)
+        pizzaList.appendChild(tr)
       })
-      document.getElementById('test').innerHTML = html
+      // document.getElementById('test').innerHTML = html
     })
   }
 
