@@ -1,5 +1,5 @@
 import Dexie from 'dexie'
-import {Pizza} from './pizza.js'
+import { Pizza } from './pizza.js'
 
 export class ListPizza {
   constructor () {
@@ -40,20 +40,26 @@ export class ListPizza {
     const tdTopping = document.createElement('td')
     tdTopping.innerHTML = pizza.toString('fr')
     const tdCook = document.createElement('td')
-    // a faire
-
+    const cookButton = document.createElement('button')
+    cookButton.innerHTML = 'Cuire'
+    cookButton.addEventListener('click', function () {
+      if (pizza && !pizza.isCook) {
+        pizza.cook()
+        document.activeElement.parentNode.innerHTML = 'cuit!!!'
+      }
+    })
     const tdRemove = document.createElement('td')
-    const RemoveButton = document.createElement('button')
-    RemoveButton.innerHTML = 'Supprimer'
-    RemoveButton.addEventListener('click', function () {
+    const removeButton = document.createElement('button')
+    removeButton.innerHTML = 'Supprimer'
+    removeButton.addEventListener('click', function () {
       if (pizza) {
         this.deletePizza(idPizza)
         console.log(pizza.monNom() + ' supprimé')
         pizzaList.removeChild(tr)
       }
     }.bind(this))
-    tdRemove.appendChild(RemoveButton)
-
+    tdRemove.appendChild(removeButton)
+    tdCook.appendChild(cookButton)
     tr.appendChild(tdName)
     tr.appendChild(tdTopping)
     tr.appendChild(tdCook)
@@ -69,7 +75,7 @@ export class ListPizza {
         const tr = this.addLinePizza(pizza, item.id, pizzaList)
         pizzaList.appendChild(tr)
       })
-      // document.getElementById('test').innerHTML = html
+    // document.getElementById('test').innerHTML = html
     })
   }
 
