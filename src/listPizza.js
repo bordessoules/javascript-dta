@@ -18,7 +18,9 @@ export class ListPizza {
     this.pizzas = this.db.pizzas.delete(pizzaId)
     return this
   }
-
+  updatePizza (pizzaId, pizzaModification) {
+    return this.db.pizzas.update(pizzaId, pizzaModification)
+  }
   getPizzas () {
     return this.db.pizzas.toArray()
   }
@@ -40,14 +42,25 @@ export class ListPizza {
     const tdTopping = document.createElement('td')
     tdTopping.innerHTML = pizza.toString('fr')
     const tdCook = document.createElement('td')
-    const cookButton = document.createElement('button')
-    cookButton.innerHTML = 'Cuire'
-    cookButton.addEventListener('click', function () {
-      if (pizza && !pizza.isCook) {
-        pizza.cook()
-        document.activeElement.parentNode.innerHTML = 'cuit!!!'
-      }
-    })
+    var cookField
+    if (pizza && pizza.isCook) {
+      cookField = document.createElement('p')
+      cookField.innerHTML = 'Cuit'
+    } else {
+      cookField = document.createElement('button')
+      cookField.innerHTML = 'Cuire'
+      cookField.addEventListener('click', function () {
+        tdCook.removeChild(cookField)
+        cookField = document.createElement('p')
+        cookField.innerHTML = 'cooking in progress'
+        tdCook.appendChild(cookField)
+        pizza.cook().then(() => {
+          this.updatePizza(idPizza, { 'isCook': 'true' }).then(() => {
+            cookField.innerHTML = 'Cuit'
+          })
+        })
+      }.bind(this))
+    }
     const tdRemove = document.createElement('td')
     const removeButton = document.createElement('button')
     removeButton.innerHTML = 'Supprimer'
@@ -59,7 +72,7 @@ export class ListPizza {
       }
     }.bind(this))
     tdRemove.appendChild(removeButton)
-    tdCook.appendChild(cookButton)
+    tdCook.appendChild(cookField)
     tr.appendChild(tdName)
     tr.appendChild(tdTopping)
     tr.appendChild(tdCook)
@@ -75,7 +88,6 @@ export class ListPizza {
         const tr = this.addLinePizza(pizza, item.id, pizzaList)
         pizzaList.appendChild(tr)
       })
-    // document.getElementById('test').innerHTML = html
     })
   }
 
