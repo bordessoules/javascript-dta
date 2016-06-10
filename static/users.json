@@ -1,0 +1,17 @@
+[
+  {
+    "name": "albin",
+    "email": "toto@toto.fr",
+    "age": 26
+  },
+  {
+    "name": "toto",
+    "email": "tato@toto.fr",
+    "age": 31
+  },
+  {
+    "name": "tata",
+    "email": "tota@toto.fr",
+    "age": 28
+  }
+]
