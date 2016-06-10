@@ -33,7 +33,7 @@ var arrayPizza = new ListPizza()
 
 arrayPizza.addHtml()
 
-let pizza = null
+var pizza = null
 
 document.getElementById('addPizza')
   .addEventListener('click', function (evt) {
@@ -41,6 +41,10 @@ document.getElementById('addPizza')
       const value = document.getElementById('value_addPizza')
       pizza = new Pizza(value.value)
       console.log('Pizza en préparation')
+      let buttonToppings = document.querySelectorAll('button[id=buttonToppings]')
+      buttonToppings.forEach(item => {
+        item.removeAttribute('hidden')
+      })
     }
   }, false)
 
@@ -48,6 +52,8 @@ var toppingsButtons = document.getElementById('toppings')
 Object.keys(_map).forEach(topping => {
   const toppingButton = document.createElement('button')
   toppingButton.innerHTML = _map[topping]['fr']
+  toppingButton.setAttribute('hidden', 'true')
+  toppingButton.setAttribute('id', 'buttonToppings')
   toppingButton.addEventListener('click', evt => {
     if (pizza) {
       pizza.addTopping(topping)
@@ -60,10 +66,16 @@ Object.keys(_map).forEach(topping => {
 document.getElementById('enregistrer')
   .addEventListener('click', function (evt) {
     if (pizza) {
-      arrayPizza.addPizza(pizza)
-      console.log('pizza ajouté')
-      pizza = null
-      arrayPizza.addHtml()
+      arrayPizza.addPizza(pizza).then(pizzaId => {
+        let toppings = document.getElementById('listePizza')
+        toppings.appendChild(arrayPizza.addLinePizza(pizza, pizzaId, toppings))
+        let buttonToppings = document.querySelectorAll('button[id=buttonToppings]')
+        buttonToppings.forEach(item => {
+          item.setAttribute('hidden', 'true')
+        })
+        console.log('pizza ajouté')
+        pizza = null
+      })
     }
   }, false)
 

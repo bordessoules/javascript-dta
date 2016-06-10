@@ -8,20 +8,19 @@ export class ListPizza {
       pizzas: '++id, name'
     })
     this.db.open()
-    this.pizzas = []
   }
 
   addPizza (pizza) {
-    this.db.pizzas.add(pizza)
+    return this.db.pizzas.add(pizza)
+  }
+
+  deletePizza (pizzaId) {
+    this.pizzas = this.db.pizzas.delete(pizzaId)
     return this
   }
 
-  deletePizza (pizza) {
-    const filtre = function (v) {
-      return v !== pizza
-    }
-    this.pizzas = this.pizzas.filter(filtre)
-    return this
+  getPizzas () {
+    return this.db.pizzas.toArray()
   }
 
   filtre (topping) {
@@ -34,35 +33,40 @@ export class ListPizza {
     return newArray
   }
 
+  addLinePizza (pizza, idPizza, pizzaList) {
+    const tr = document.createElement('tr')
+    const tdName = document.createElement('td')
+    tdName.innerHTML = pizza.monNom()
+    const tdTopping = document.createElement('td')
+    tdTopping.innerHTML = pizza.toString('fr')
+    const tdCook = document.createElement('td')
+    // a faire
+
+    const tdRemove = document.createElement('td')
+    const RemoveButton = document.createElement('button')
+    RemoveButton.innerHTML = 'Supprimer'
+    RemoveButton.addEventListener('click', function () {
+      if (pizza) {
+        this.deletePizza(idPizza)
+        console.log(pizza.monNom() + ' supprimé')
+        pizzaList.removeChild(tr)
+      }
+    }.bind(this))
+    tdRemove.appendChild(RemoveButton)
+
+    tr.appendChild(tdName)
+    tr.appendChild(tdTopping)
+    tr.appendChild(tdCook)
+    tr.appendChild(tdRemove)
+    return tr
+  }
+
   addHtml () {
-    let list = this.db.pizzas.toArray()
-    var pizzaList = document.getElementById('listePizza')
-    list.then(data => {
-      data.forEach(function (item) {
-        var pizza = new Pizza(item.name, item.toppings, item.isCook)
-        let tr = document.createElement('tr')
-        let tdName = document.createElement('td')
-        tdName.innerHTML = pizza.monNom()
-        let tdTopping = document.createElement('td')
-        tdTopping.innerHTML = pizza.toString('fr')
-        let tdCook = document.createElement('td')
-        // a faire
-
-        let tdRemove = document.createElement('td')
-        let RemoveButton = document.createElement('button')
-        RemoveButton.innerHTML = 'Supprimer'
-        RemoveButton.addEventListener('click', evt => {
-          if (pizza) {
-            this.deletePizza(pizza)
-            console.log(pizza.monNom() + ' supprimé')
-          }
-        })
-        tdRemove.appendChild(RemoveButton)
-
-        tr.appendChild(tdName)
-        tr.appendChild(tdTopping)
-        tr.appendChild(tdCook)
-        tr.appendChild(tdRemove)
+    const pizzaList = document.getElementById('listePizza')
+    this.getPizzas().then(data => {
+      data.forEach((item) => {
+        const pizza = new Pizza(item.name, item.toppings, item.isCook)
+        const tr = this.addLinePizza(pizza, item.id, pizzaList)
         pizzaList.appendChild(tr)
       })
       // document.getElementById('test').innerHTML = html
