@@ -39,7 +39,7 @@ export class Pizza {
 
 
   monNom () {
-    return 'nom : ' + this.name
+    return this.name
   }
 
   setNom (name) {
@@ -67,7 +67,7 @@ export class Pizza {
   }
 
   toString (lang = 'en') {
-    var chaine = '<tr>'
+    var chaine = ''
     const uniqueArray = this.toppings.reduce(function (accu, item, index, array) {
       if (accu.indexOf(item) === -1) {
         accu.push(item)
@@ -75,6 +75,7 @@ export class Pizza {
       return accu
     }, [])
     const self = this
+    chaine += '<td>'
     uniqueArray.forEach(function (item, index, array) {
       var nb = self.toppings.reduce(function (accu, item1) {
         if (item1 === item) {
@@ -82,9 +83,10 @@ export class Pizza {
         }
         return accu
       }, 0)
-      chaine += '<td>' + self.translate(item, lang) + ' (' + nb + ')</td>'
+      chaine += self.translate(item, lang) + ' (' + nb + ')'
+      if (index < array.length - 1) chaine += ','
     })
-    return chaine + '</tr>'
+    return chaine + '</td>'
   }
 
   translate (topping, lang = 'en') {

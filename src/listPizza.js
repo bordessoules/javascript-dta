@@ -35,13 +35,14 @@ export class ListPizza {
   }
 
   addHtml () {
-    let html = ''
+    let html = '<thead><tr><td>Nom pizza</td><td>Ingredients</td><td>Cuisson</td></tr></thead>'
     let list = this.db.pizzas.toArray()
     list.then(data => {
       data.forEach(function (item) {
         var pizza = new Pizza(item.name, item.toppings, item.isCook)
-        html += '<tr><td>' + pizza.monNom() + '</td></tr>'
+        html += '<tr><td>' + pizza.monNom() + '</td>'
         html += pizza.toString('fr')
+        html += '</tr>'
       })
       document.getElementById('test').innerHTML = html
     })
