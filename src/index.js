@@ -3,7 +3,13 @@ import {ListPizza} from './listPizza.js'
 
 var p = new Pizza('peperoni')
 var t = new Pizza('reine')
+var f = new Pizza('reine')
 
+f
+  .addTopping('mushrooms')
+  .addTopping('mushrooms')
+  .addTopping('ham')
+  .addTopping('peas')
 t
   .addTopping('mushrooms')
   .addTopping('mushrooms')
@@ -22,7 +28,9 @@ p
 
 var arrayPizza = new ListPizza()
 
-// arrayPizza.addPizza(t)
+arrayPizza.addPizza(t)
+arrayPizza.addPizza(p)
+arrayPizza.addPizza(f)
 // p.cook(2000)
 //   .then(() => console.log('pizza cuite'))
 //   .then(() => {

@@ -84,6 +84,7 @@ export class Pizza {
   }
 
   cook (time = 1000) {
+    console.log('pizza lancer')
     return new Promise((resolve, reject) => {
       if (this.isCook) return reject('pizza déjà cuite')
 

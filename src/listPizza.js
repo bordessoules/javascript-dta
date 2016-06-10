@@ -8,6 +8,8 @@ export class ListPizza {
       pizzas: '++id, name'
     })
     this.db.open()
+    this.pizzaAttenteCuisson = []
+    this.fourActif = false
   }
 
   addPizza (pizza) {
@@ -35,6 +37,28 @@ export class ListPizza {
     return newArray
   }
 
+  tamponFunction () {
+    if (!this.fourActif && this.pizzaAttenteCuisson.length === 1) {
+      this.fourActif = true
+      this.cuissonFour().then(() => {
+        this.fourActif = false
+      })
+    }
+  }
+
+  cuissonFour () {
+    let pizzaACuir = this.pizzaAttenteCuisson.shift()
+    return pizzaACuir['pizza'].cook(3000)
+      .then(function () {
+        this.updatePizza(pizzaACuir['id'], { 'isCook': 'true' }).then(() => {
+          pizzaACuir['field'].innerHTML = 'Cuit'
+        })
+        if (this.pizzaAttenteCuisson.length !== 0) {
+          this.cuissonFour(this.pizzaAttenteCuisson)
+        }
+      }.bind(this))
+  }
+
   addLinePizza (pizza, idPizza, pizzaList) {
     const tr = document.createElement('tr')
     const tdName = document.createElement('td')
@@ -54,11 +78,14 @@ export class ListPizza {
         cookField = document.createElement('p')
         cookField.innerHTML = 'cooking in progress'
         tdCook.appendChild(cookField)
-        pizza.cook().then(() => {
-          this.updatePizza(idPizza, { 'isCook': 'true' }).then(() => {
-            cookField.innerHTML = 'Cuit'
-          })
-        })
+        this.pizzaAttenteCuisson.push({ pizza: pizza, field: cookField, id: idPizza })
+        this.tamponFunction()
+
+        // pizza.cook().then(() => {
+        //   this.updatePizza(idPizza, { 'isCook': 'true' }).then(() => {
+        //     cookField.innerHTML = 'Cuit'
+        //   })
+        // })
       }.bind(this))
     }
     const tdRemove = document.createElement('td')
