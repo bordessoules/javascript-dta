@@ -1,19 +1,3 @@
-var _toppings = [
-  'tomato sauce',
-  'mozzarella',
-  'mushrooms',
-  'ham',
-  'eggs',
-  'artichoke',
-  'green olives',
-  'onion',
-  'sweet corn',
-  'green peppers',
-  'black olives',
-  'peas',
-  'salami'
-]
-
 export var _map = {
   'tomato_sauce': {'fr': 'sauce tomate', 'en': 'tomato sauce'},
   'mozzarella': {'fr': 'mozzarelle', 'en': 'mozzarella'},
@@ -37,7 +21,6 @@ export class Pizza {
     this.isCook = isCook || false
   }
 
-
   monNom () {
     return 'nom : ' + this.name
   }
@@ -52,7 +35,7 @@ export class Pizza {
       return v === toppings
     }
 
-    if (_toppings.filter(filtre).length !== 0 && this.toppings.filter(filtre).length < 2) {
+    if (Object.keys(_map).filter(filtre).length !== 0 && this.toppings.filter(filtre).length < 2) {
       this.toppings.push(toppings)
     }
     return this
