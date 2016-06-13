@@ -8,6 +8,9 @@ export class ListPizza {
       pizzas: '++id, name'
     })
     this.db.open()
+    this.thingsToCook = []
+    console.log
+    this.four()
   }
 
   addPizza (pizza) {
@@ -34,6 +37,20 @@ export class ListPizza {
     })
     return newArray
   }
+  four (thingsToCook) {
+    if (this.thingsToCook && this.thingsToCook.length === 0) {
+      return setTimeout(this.four.bind(this), 500)
+    } else {
+      console.log('je suis dans le four')
+      var objectToCook = thingsToCook.shift()
+      objectToCook.pizza.cook().then(() => {
+        this.updatePizza(objectToCook.idPizza, { 'isCook': 'true' }).then(() => {
+          objectToCook.cookField.innerHTML = 'Cuit'
+          this.four(thingsToCook)
+        })
+      })
+    }
+  }
 
   addLinePizza (pizza, idPizza, pizzaList) {
     const tr = document.createElement('tr')
@@ -54,11 +71,13 @@ export class ListPizza {
         cookField = document.createElement('p')
         cookField.innerHTML = 'cooking in progress'
         tdCook.appendChild(cookField)
-        pizza.cook().then(() => {
-          this.updatePizza(idPizza, { 'isCook': 'true' }).then(() => {
-            cookField.innerHTML = 'Cuit'
-          })
+        this.thingsToCook.push({pizza: pizza, iPpizza: idPizza, cookField: cookField})
+        this.four(this.thingsToCook)
+      /* pizza.cook().then(() => {
+        this.updatePizza(idPizza, { 'isCook': 'true' }).then(() => {
+          cookField.innerHTML = 'Cuit'
         })
+      })*/
       }.bind(this))
     }
     const tdRemove = document.createElement('td')
